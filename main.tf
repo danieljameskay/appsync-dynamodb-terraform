@@ -67,12 +67,8 @@ type Flight {
     seatCapacity: Int!
 }
 
-type ModelFlightConnection {
-    items: [Flight]
-}
-
 type Query {
-    listFlights : ModelFlightConnection
+    getFlight(id: ID!): Flight
 }
 
 schema {
@@ -83,25 +79,23 @@ EOF
 
 resource "aws_appsync_resolver" "example" {
   api_id      = "${aws_appsync_graphql_api.example.id}"
-  field       = "listFlights"
+  field       = "getFlight"
   type        = "Query"
   data_source = "${aws_appsync_datasource.example.name}"
 
-
   request_template = <<EOF
   {
-    "version": "2018-05-29",
-    "method": "GET",
-    "resourcePath": "/",
-    "params":{
-        "headers": $utils.http.copyheaders($ctx.request.headers)
+    "version": "2017-02-28",
+    "operation": "GetItem",
+    "key" : {
+        "id" : $util.dynamodb.toDynamoDBJson($ctx.args.id)
     }
   }
   EOF
 
   response_template = <<EOF
     #if($ctx.result.statusCode == 200)
-      $ctx.result.body
+      $utils.toJson($context.result)
     #else
       $utils.appendError($ctx.result.body, $ctx.result.statusCode)
     #end
