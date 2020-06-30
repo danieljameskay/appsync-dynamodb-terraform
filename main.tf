@@ -81,6 +81,40 @@ schema {
 EOF
 }
 
+resource "aws_appsync_resolver" "test" {
+  api_id      = "${aws_appsync_graphql_api.test.id}"
+  field       = "singlePost"
+  type        = "Query"
+  data_source = "${aws_appsync_datasource.example.name}"
+
+  request_template = <<EOF
+{
+    "version": "2018-05-29",
+    "method": "GET",
+    "resourcePath": "/",
+    "params":{
+        "headers": $utils.http.copyheaders($ctx.request.headers)
+    }
+}
+EOF
+
+  response_template = <<EOF
+#if($ctx.result.statusCode == 200)
+    $ctx.result.body
+#else
+    $utils.appendError($ctx.result.body, $ctx.result.statusCode)
+#end
+EOF
+
+  caching_config {
+    caching_keys = [
+      "$context.identity.sub",
+      "$context.arguments.id"
+    ]
+    ttl = 60
+  }
+}
+
 resource "aws_appsync_datasource" "example" {
   api_id           = "${aws_appsync_graphql_api.example.id}"
   name             = "tf_appsync_example"
