@@ -66,18 +66,6 @@ type Flight {
     seatAllocation: Int
     seatCapacity: Int!
 }
-
-type ModelFlightConnection {
-    items: [Flight]
-}
-
-type Query {
-    listFlights() : ModelFlightConnection
-}
-
-schema {
-    query: Query
-}
 EOF
 }
 
