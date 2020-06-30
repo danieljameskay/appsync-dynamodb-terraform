@@ -81,8 +81,8 @@ schema {
 EOF
 }
 
-resource "aws_appsync_resolver" "test" {
-  api_id      = "${aws_appsync_graphql_api.test.id}"
+resource "aws_appsync_resolver" "example" {
+  api_id      = "${aws_appsync_graphql_api.example.id}"
   field       = "singlePost"
   type        = "Query"
   data_source = "${aws_appsync_datasource.example.name}"
