@@ -67,8 +67,13 @@ type Flight {
     seatCapacity: Int!
 }
 
+type Flights {
+    items: [Flight]
+}
+
 type Query {
     getFlight(id: ID!): Flight
+    allFlights : Flights
 }
 
 schema {
@@ -77,7 +82,25 @@ schema {
 EOF
 }
 
-resource "aws_appsync_resolver" "example" {
+resource "aws_appsync_resolver" "allFlights" {
+  api_id      = "${aws_appsync_graphql_api.example.id}"
+  field       = "allFlights"
+  type        = "Query"
+  data_source = "${aws_appsync_datasource.example.name}"
+
+  request_template = <<EOF
+  {
+    "version": "2017-02-28",
+    "operation": "Scan",
+  }
+  EOF
+
+  response_template = <<EOF
+    $util.toJson($ctx.result)
+  EOF
+}
+
+resource "aws_appsync_resolver" "getFlight" {
   api_id      = "${aws_appsync_graphql_api.example.id}"
   field       = "getFlight"
   type        = "Query"
