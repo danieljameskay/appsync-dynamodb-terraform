@@ -94,11 +94,7 @@ resource "aws_appsync_resolver" "example" {
   EOF
 
   response_template = <<EOF
-    #if($ctx.result.statusCode == 200)
-      $utils.toJson($ctx.result)
-    #else
-      $utils.appendError($ctx.result.body, $ctx.result.statusCode)
-    #end
+    $util.toJson($ctx.result)
   EOF
 }
 
