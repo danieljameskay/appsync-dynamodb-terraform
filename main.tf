@@ -77,10 +77,8 @@ resource "aws_appsync_graphql_api" "example" {
 
     schema {
         query: Query
-        mutation: Mutation
     }
     EOF
-    }
 }
 
 resource "aws_appsync_datasource" "example" {
