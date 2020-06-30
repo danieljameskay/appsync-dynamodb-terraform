@@ -63,7 +63,7 @@ type Flight {
     ticketPrice: Int!
     ticketCurrency: String!
     flightNumber: Int!
-    seatAllocation: Int # Disabling due to regression in amplify-cli 4.13.1: @deprecated(reason: "use seatCapacity instead. seatAllocation will be removed in the stable release.")
+    seatAllocation: Int
     seatCapacity: Int!
 }
 
