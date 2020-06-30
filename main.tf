@@ -87,6 +87,14 @@ resource "aws_appsync_resolver" "example" {
   type        = "Query"
   data_source = "${aws_appsync_datasource.example.name}"
 
+  caching_config {
+    caching_keys = [
+      "$context.identity.sub",
+      "$context.arguments.id"
+    ]
+    ttl = 60
+  }
+
   request_template = <<EOF
   {
     "version": "2018-05-29",
@@ -105,14 +113,6 @@ resource "aws_appsync_resolver" "example" {
       $utils.appendError($ctx.result.body, $ctx.result.statusCode)
     #end
   EOF
-
-  caching_config {
-    caching_keys = [
-      "$context.identity.sub",
-      "$context.arguments.id"
-    ]
-    ttl = 60
-  }
 }
 
 resource "aws_appsync_datasource" "example" {
