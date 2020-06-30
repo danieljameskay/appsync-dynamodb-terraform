@@ -104,7 +104,7 @@ resource "aws_appsync_resolver" "example" {
 
 resource "aws_appsync_datasource" "example" {
   api_id           = "${aws_appsync_graphql_api.example.id}"
-  name             = "Flight-qebluapgb5hufleyrbja5rrvja-dev"
+  name             = "tf_appsync_example"
   service_role_arn = "${aws_iam_role.example.arn}"
   type             = "AMAZON_DYNAMODB"
   dynamodb_config {
