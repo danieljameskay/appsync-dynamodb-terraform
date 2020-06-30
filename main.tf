@@ -47,6 +47,40 @@ EOF
 resource "aws_appsync_graphql_api" "example" {
   authentication_type = "API_KEY"
   name                = "tf_appsync_example"
+  schema              = <<EOF
+    type Flight {
+        id: ID!
+        departureDate: String!
+        departureAirportCode: String!
+        departureAirportName: String!
+        departureCity: String!
+        departureLocale: String!
+        arrivalDate: String!
+        arrivalAirportCode: String!
+        arrivalAirportName: String!
+        arrivalCity: String!
+        arrivalLocale: String!
+        ticketPrice: Int!
+        ticketCurrency: String!
+        flightNumber: Int!
+        seatAllocation: Int # Disabling due to regression in amplify-cli 4.13.1: @deprecated(reason: "use seatCapacity instead. seatAllocation will be removed in the stable release.")
+        seatCapacity: Int!
+    }
+
+    type ModelFlightConnection {
+        items: [Flight]
+    }
+
+    type Query {
+        listFlights() : ModelFlightConnection
+    }
+
+    schema {
+        query: Query
+        mutation: Mutation
+    }
+    EOF
+    }
 }
 
 resource "aws_appsync_datasource" "example" {
