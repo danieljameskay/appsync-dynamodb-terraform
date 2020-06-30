@@ -17,7 +17,7 @@ resource "aws_iam_role_policy" "example" {
       ],
       "Effect": "Allow",
       "Resource": [
-        "${aws_dynamodb_table.example.arn}"
+        "${var.db_table_name}"
       ]
     }
   ]
@@ -36,6 +36,6 @@ resource "aws_appsync_datasource" "example" {
   service_role_arn = "${aws_iam_role.example.arn}"
   type             = "AMAZON_DYNAMODB"
   dynamodb_config {
-    table_name = "Flight-qebluapgb5hufleyrbja5rrvja-dev"
+    table_name = var.db_table_name
   }
 }
