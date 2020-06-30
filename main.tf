@@ -89,31 +89,23 @@ resource "aws_appsync_resolver" "example" {
 
 
   request_template = <<EOF
-{
+  {
     "version": "2018-05-29",
     "method": "GET",
     "resourcePath": "/",
     "params":{
         "headers": $utils.http.copyheaders($ctx.request.headers)
     }
-}
-EOF
+  }
+  EOF
 
   response_template = <<EOF
-#if($ctx.result.statusCode == 200)
+    #if($ctx.result.statusCode == 200)
     $ctx.result.body
-#else
+    #else
     $utils.appendError($ctx.result.body, $ctx.result.statusCode)
-#end
-EOF
-
-  caching_config {
-    caching_keys = [
-      "$context.identity.sub",
-      "$context.arguments.id"
-    ]
-    ttl = 60
-  }
+    #end
+  EOF
 }
 
 resource "aws_appsync_datasource" "example" {
