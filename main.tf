@@ -87,6 +87,26 @@ resource "aws_appsync_resolver" "example" {
   type        = "Query"
   data_source = "${aws_appsync_datasource.example.name}"
 
+
+  request_template = <<EOF
+{
+    "version": "2018-05-29",
+    "method": "GET",
+    "resourcePath": "/",
+    "params":{
+        "headers": $utils.http.copyheaders($ctx.request.headers)
+    }
+}
+EOF
+
+  response_template = <<EOF
+#if($ctx.result.statusCode == 200)
+    $ctx.result.body
+#else
+    $utils.appendError($ctx.result.body, $ctx.result.statusCode)
+#end
+EOF
+
   caching_config {
     caching_keys = [
       "$context.identity.sub",
@@ -94,25 +114,6 @@ resource "aws_appsync_resolver" "example" {
     ]
     ttl = 60
   }
-
-  request_template = <<EOF
-  {
-    "version": "2018-05-29",
-    "method": "GET",
-    "resourcePath": "/",
-    "params":{
-        "headers": $utils.http.copyheaders($ctx.request.headers)
-    }
-  }
-  EOF
-
-  response_template = <<EOF
-    #if($ctx.result.statusCode == 200)
-      $ctx.result.body
-    #else
-      $utils.appendError($ctx.result.body, $ctx.result.statusCode)
-    #end
-  EOF
 }
 
 resource "aws_appsync_datasource" "example" {
