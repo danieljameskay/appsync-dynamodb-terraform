@@ -36,7 +36,7 @@ resource "aws_iam_role_policy" "example" {
       ],
       "Effect": "Allow",
       "Resource": [
-        "${var.db_table_name}"
+        "${var.db_table_arn}"
       ]
     }
   ]
